@@ -1,4 +1,5 @@
-﻿using Application.Features.OperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.OperationClaims.Constants;
 using Application.Features.OperationClaims.Dtos;
 using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
@@ -20,8 +21,7 @@ namespace Application.Features.OperationClaims.Commands.CreateOperationClaim
 
         public string[] Roles { get; } =
         {
-            OperationClaimRoles.OperationClaimAdmin,
-            OperationClaimRoles.OperationClaimCreate
+            GeneralRoles.SystemAdmin,
         };
         public class CreateOperationClaimCommandHandler : IRequestHandler<CreateOperationClaimCommand, CreateOperationClaimDto>
         {

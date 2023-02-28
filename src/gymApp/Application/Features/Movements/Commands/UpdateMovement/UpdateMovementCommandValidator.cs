@@ -12,6 +12,7 @@ namespace Application.Features.Movements.Commands.UpdateMovement
         public UpdateMovementCommandValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.CategoryId).NotNull();
             RuleFor(x => x.Id).NotNull();
         }
     }

@@ -1,17 +1,13 @@
-﻿using Application.Features.BodyInformations.Dtos;
+﻿using Application.Features.BodyInformations.Constants;
 using Application.Features.BodyInformations.Models;
 using Application.Features.BodyInformations.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
 using Core.Application.Requests;
 using Core.Persistence.Paging;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.BodyInformations.Queries.GetBodyInformationList
 {

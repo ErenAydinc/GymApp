@@ -1,4 +1,5 @@
-﻿using Application.Features.UserOperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.UserOperationClaims.Constants;
 using Application.Features.UserOperationClaims.Dtos;
 using Application.Features.UserOperationClaims.Models;
 using Application.Features.UserOperationClaims.Rules;
@@ -23,8 +24,8 @@ namespace Application.Features.UserOperationClaims.Queries.GetUserOperationClaim
 
         public string[] Roles { get; } =
         {
-            UserOperationClaimRoles.UserOperationClaimAdmin,
-            UserOperationClaimRoles.UserOperationClaimRead
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
         };
 
         public class GetUserOperationClaimListQueryHandler : IRequestHandler<GetUserOperationClaimListQuery, UserOperationClaimListModel>

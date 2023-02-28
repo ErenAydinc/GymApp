@@ -1,4 +1,5 @@
-﻿using Application.Features.UserOperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.UserOperationClaims.Constants;
 using Application.Features.UserOperationClaims.Dtos;
 using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace Application.Features.UserOperationClaims.Commands.UpdateUserOperationClaim
 {
-    public class UpdateUserOperationClaimCommand:IRequest<UpdateUserOperationClaimDto>,ISecuredRequest
+    public class UpdateUserOperationClaimCommand : IRequest<UpdateUserOperationClaimDto>, ISecuredRequest
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -17,8 +18,8 @@ namespace Application.Features.UserOperationClaims.Commands.UpdateUserOperationC
 
         public string[] Roles { get; } =
         {
-            UserOperationClaimRoles.UserOperationClaimUpdate,
-            UserOperationClaimRoles.UserOperationClaimAdmin
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
         };
         public class UpdateUserOperationClaimCommandHandler : IRequestHandler<UpdateUserOperationClaimCommand, UpdateUserOperationClaimDto>
         {

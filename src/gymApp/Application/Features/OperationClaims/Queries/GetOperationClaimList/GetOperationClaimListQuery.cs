@@ -1,4 +1,5 @@
-﻿using Application.Features.OperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.OperationClaims.Constants;
 using Application.Features.OperationClaims.Models;
 using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
@@ -22,9 +23,10 @@ namespace Application.Features.OperationClaims.Queries.GetOperationClaimList
 
         public string[] Roles { get; } =
         {
-            OperationClaimRoles.OperationClaimAdmin,
-            OperationClaimRoles.OperationClaimRead
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin
         };
+
 
         public class GetOperationClaimListQueryHandler : IRequestHandler<GetOperationClaimListQuery, OperationClaimListModel>
         {

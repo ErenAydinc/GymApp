@@ -12,6 +12,7 @@ namespace Application.Features.Movements.Commands.CreateMovement
         public CreateMovementCommandValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.CategoryId).NotNull();
         }
     }
 }

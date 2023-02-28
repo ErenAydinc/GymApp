@@ -29,7 +29,8 @@ namespace Application.Features.Auths.Rules
         public async Task EmailIsNotExists(string email)
         {
             User? user = await _userRepository.GetAsync(u => u.Email == email);
-            if (user == null) throw new BusinessException("Mail is not exists");
+            if (user == null) throw new BusinessException("Email not exists");
+
         }
 
         public async Task VerifyMemberPassword(string password, byte[] passwordHash, byte[] passwordSalt)

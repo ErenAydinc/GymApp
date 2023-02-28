@@ -2,10 +2,20 @@
 
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<TypeScriptTarget>ES3</TypeScriptTarget>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+	  <TypeScriptTarget>ES3</TypeScriptTarget>
+	  <Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<TypeScriptTarget>ES3</TypeScriptTarget>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+	  <TypeScriptTarget>ES3</TypeScriptTarget>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -39,6 +49,7 @@
 	  <Folder Include="Images\" />
 	  <Folder Include="Models\" />
 	  <Folder Include="wwwroot\" />
+	  <Folder Include="wwwroot\Images\" />
 	</ItemGroup>
 
 </Project>

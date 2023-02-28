@@ -1,7 +1,9 @@
-﻿using Application.Features.BodyInformations.Dtos;
+﻿using Application.Features.BodyInformations.Constants;
+using Application.Features.BodyInformations.Dtos;
 using Application.Features.BodyInformations.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
 using Domain.Entities;
 using MediatR;
 using System;
@@ -15,6 +17,7 @@ namespace Application.Features.BodyInformations.Queries.GetBodyInformationById
     public class GetBodyInformationByIdQuery:IRequest<GetBodyInformationByIdDto>
     {
         public int Id { get; set; }
+
         public class GetBodyInformationByIdQueryHandler:IRequestHandler<GetBodyInformationByIdQuery, GetBodyInformationByIdDto>
         {
             private readonly IBodyInformationRepository _bodyInformationRepository;

@@ -11,10 +11,11 @@ namespace Application.Features.Users.Commands.CreateUser
     {
         public CreateUserCommandValidator()
         {
-            RuleFor(u => u.CreateUserDto.Email).NotEmpty();
-            RuleFor(u => u.CreateUserDto.FirstName).NotEmpty();
-            RuleFor(u => u.CreateUserDto.LastName).NotEmpty();
-            RuleFor(u => u.CreateUserDto.Password).NotEmpty();
+            RuleFor(u => u.UserForRegisterDto.Email).NotEmpty();
+            RuleFor(u => u.UserForRegisterDto.FirstName).NotEmpty();
+            RuleFor(u => u.UserForRegisterDto.LastName).NotEmpty();
+            RuleFor(u => u.UserForRegisterDto.Password).NotEmpty();
+            RuleFor(u => u.UserForRegisterDto.Type).NotEmpty();
         }
     }
 }

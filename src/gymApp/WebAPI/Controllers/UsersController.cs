@@ -1,18 +1,21 @@
 ﻿using Application.Features.Auths.Dtos;
+using Application.Features.DeleteStudents.Queries.GetDeleteStudentList;
+using Application.Features.PersonalTrainers.Queries.GetPersonalTrainerList;
+using Application.Features.Students.Queries.GetStudentList;
 using Application.Features.Users.Commands.CreateUser;
+using Application.Features.Users.Commands.DeleteUser;
 using Application.Features.Users.Commands.UpdateUser;
 using Application.Features.Users.Dtos;
 using Application.Features.Users.Models;
+using Application.Features.Users.Queries.GetUserByCustomerList;
 using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Users.Queries.GetUserList;
-using Application.Services.Repositories;
-using Core.Application.Pipelines.Authorization;
 using Core.Application.Requests;
+using Core.Security.Dtos;
 using Core.Security.Entities;
 using Core.Security.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -42,6 +45,45 @@ namespace WebAPI.Controllers
             return Ok(userListModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPersonalTrainerList([FromQuery] PageRequest pageRequest, [FromQuery] string? searchFirstName, [FromQuery] string? searchLastName)
+        {
+            GetPersonalTrainerListQuery getPersonalTrainerListQuery = new() { PageRequest = pageRequest ,SearchFirstName=searchFirstName,SearchLastName=searchLastName};
+            PersonalTrainerListModel personalTrainerListModel = await Mediator.Send(getPersonalTrainerListQuery);
+            return Ok(personalTrainerListModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentList([FromQuery] PageRequest pageRequest, [FromQuery] string? searchFirstName, [FromQuery] string? searchLastName, [FromQuery] bool status)
+        {
+            GetStudentListQuery getStudentListQuery = new() { PageRequest = pageRequest,SearchFirstName= searchFirstName ,SearchLastName=searchLastName,Status=status};
+            StudentListModel studentListModel = await Mediator.Send(getStudentListQuery);
+            return Ok(studentListModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDeleteStudentList([FromQuery] PageRequest pageRequest, [FromQuery] string? searchFirstName)
+        {
+            GetDeleteStudentListQuery getDeleteStudentListQuery = new() { PageRequest = pageRequest ,SearchFirstName=searchFirstName};
+            DeleteStudentListModel deleteStudentListModel = await Mediator.Send(getDeleteStudentListQuery);
+            return Ok(deleteStudentListModel);
+        }
+
+
+        /// <summary>
+        /// Giren adminin customerına bağlı user listeleme
+        /// </summary>
+        /// <param name="pageRequest"></param>
+        /// <returns></returns>
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserListByCustomer([FromQuery] PageRequest pageRequest)
+        {
+            GetUserByCustomerListQuery getUserByCustomerListQuery = new() { PageRequest = pageRequest };
+            UserByCustomerListModel userByCustomerListModel = await Mediator.Send(getUserByCustomerListQuery);
+            return Ok(userByCustomerListModel);
+        }
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetById([FromRoute] GetUserByIdQuery getUserByIdQuery)
         {
@@ -50,17 +92,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserDto createUserDto)
+        public async Task<IActionResult> Create([FromBody] UserForRegisterDto userForRegisterDto)
         {
-            CreateUserCommand createUserCommand = new()
+            CreateUserCommand registerCommand = new()
             {
-                CreateUserDto = createUserDto,
+                 UserForRegisterDto= userForRegisterDto,
                 IpAddress = GetIpAddress()
             };
 
-            RegisteredDto result = await Mediator.Send(createUserCommand);
-            SetRefreshTokenToCookie(result.RefreshToken);
-            return Created("", result.AccessToken);
+            RegisteredDto result = await Mediator.Send(registerCommand);
+            return Created("", registerCommand);
         }
 
         [HttpPut]
@@ -70,10 +111,17 @@ namespace WebAPI.Controllers
             return Ok(updateUserDto);
         }
 
-        private void SetRefreshTokenToCookie(RefreshToken refreshToken)
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromBody] DeleteUserCommand deleteUserCommand)
         {
-            CookieOptions cookieOptions = new() { HttpOnly = true, Expires = DateTime.Now.AddDays(7) };
-            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            DeleteUserDto deleteUserDto= await Mediator.Send(deleteUserCommand);
+            return Ok(deleteUserDto);
         }
+
+        //private void SetRefreshTokenToCookie(RefreshToken refreshToken)
+        //{
+        //    CookieOptions cookieOptions = new() { HttpOnly = true, Expires = DateTime.Now.AddDays(7) };
+        //    Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+        //}
     }
 }

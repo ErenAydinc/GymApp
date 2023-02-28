@@ -13,5 +13,9 @@ namespace Application.Features.Users.Dtos
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }
+        public int Type { get; set; }
+        public int TimeZone { get; set; }
+        public DateTime MemberStartDate { get; set; }
+        public DateTime MemberEndDate { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Security.Entities;
+﻿using Core.Application.Pipelines.Authorization;
+using Core.Security.Entities;
 using Core.Security.Hashing;
 using Domain.Entities;
 using Domain.MappingEntities;
@@ -16,14 +17,15 @@ namespace Persistence.Contexts
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<BodyInformation> BodyInformations { get; set; }
-        public DbSet<MemberType> MemberTypes { get; set; }
-        public DbSet<Movement> Movements{ get; set; }
-        public DbSet<ImageUpload> ImageUploads { get; set; }
+        public DbSet<Movement> Movements { get; set; }
+        public DbSet<MovementImage> MovementImages { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Category> Categories { get; set; }
         #region MappingDbSet
-
-        public DbSet<UserMemberTypeMapping> UserMemberTypeMappings { get; set; }
-        public DbSet<MovementImageUploadMapping> MovementImageUploadMappings { get; set; }
-
+        public DbSet<CustomerToMovementMapping> CustomerToMovementMappings { get; set; }
+        public DbSet<PersonalTrainerStudent> PersonalTrainerStudents { get; set; }
+        public DbSet<UsersMovement> UsersMovements { get; set; }
         #endregion
 
         #endregion
@@ -55,7 +57,6 @@ namespace Persistence.Contexts
         {
 
             // Operation Claim
-
             modelBuilder.Entity<OperationClaim>(a =>
             {
                 a.ToTable("operationclaims").HasKey(k => k.Id);
@@ -63,24 +64,13 @@ namespace Persistence.Contexts
                 a.Property(p => p.Name).HasColumnName("FirstName");
             });
 
-            OperationClaim[] operationClaims = { new(1,"BodyInformation.Admin"), new(2, "BodyInformation.Create"),
-                new(3, "BodyInformation.Update"), new(4, "BodyInformation.Delete"), new(5, "BodyInformation.Read"),
-                new(6, "MemberType.Admin"), new(7, "MemberType.Create"),
-                new(8, "MemberType.Update"), new(9, "MemberType.Delete"), new(10, "MemberType.Read"),
-                new(11, "OperationClaim.Admin"), new(12, "OperationClaim.Create"),
-                new(13, "OperationClaim.Update"), new(14, "OperationClaim.Delete"), new(15, "OperationClaim.Read"),
-                new(16, "UserOperationClaim.Admin"), new(17, "UserOperationClaim.Create"),
-                new(18, "UserOperationClaim.Update"), new(19, "UserOperationClaim.Delete"), new(20, "UserOperationClaim.Read"),
-                new(21, "UserMemberTypeMapping.Admin"), new(22, "UserMemberTypeMapping.Create"),
-                new(23, "UserMemberTypeMapping.Update"), new(24, "UserMemberTypeMapping.Delete"), new(25, "UserMemberTypeMapping.Read"),
-                new(26, "Movement.Admin"), new(27, "Movement.Create"),
-                new(28, "Movement.Update"), new(29, "Movement.Delete"), new(30, "Movement.Read"),
-                new(31, "MovementImageUploadMapping.Admin"), new(32, "MovementImageUploadMapping.Create"),
-                new(33, "MovementImageUploadMapping.Update"), new(34, "MovementImageUploadMapping.Delete"), new(35, "MovementImageUploadMapping.Read")};
+            OperationClaim[] operationClaims =
+                { new(1,"System Admin"), new(2, "Gym Admin"),
+                new(3, "Personal Trainer")};
             modelBuilder.Entity<OperationClaim>().HasData(operationClaims);
 
 
-            // User
+
 
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash("12345", out passwordHash, out passwordSalt);
@@ -94,10 +84,15 @@ namespace Persistence.Contexts
                 u.Property(u => u.PasswordSalt).HasColumnName("PasswordSalt");
                 u.Property(u => u.PasswordHash).HasColumnName("PasswordHash");
                 u.Property(u => u.Status).HasColumnName("Status");
+                u.Property(u => u.Type).HasColumnName("Type");
+                u.Property(u => u.TimeZone).HasColumnName("TimeZone");
+                u.Property(u => u.MemberStartDate).HasColumnName("MemberStartDate");
+                u.Property(u => u.MemberEndDate).HasColumnName("MemberEndDate");
                 u.Property(u => u.AuthenticatorType).HasColumnName("AuthenticatorType");
+                
             });
 
-            User[] users = { new(4, "gymapp", "gymapp", "gymapp@gymapp.com", passwordSalt, passwordHash, true, 0) };
+            User[] users = { new(1, "gymapp", "gymapp", "gymapp@gymapp.com", 1, 1, passwordSalt, passwordHash, true, 1,1,DateTime.UtcNow,null,0) };
             modelBuilder.Entity<User>().HasData(users);
 
             // User Operation Claim
@@ -115,10 +110,40 @@ namespace Persistence.Contexts
                 foreach (var user in users)
                 {
                     userOperationClaimId++;
-                    UserOperationClaim[] userOperationClaims = { new(userOperationClaimId,user.Id,operationClaim.Id)};
+                    UserOperationClaim[] userOperationClaims = { new(userOperationClaimId, user.Id, operationClaim.Id) };
                     modelBuilder.Entity<UserOperationClaim>().HasData(userOperationClaims);
                 }
             }
+
+            //Company
+
+            modelBuilder.Entity<Company>(c =>
+            {
+                c.ToTable("companies").HasKey(c => c.Id);
+                c.Property(c => c.Id).HasColumnName("Id");
+                c.Property(c => c.Name).HasColumnName("Name");
+                c.Property(c => c.PhoneNumber).HasColumnName("PhoneNumber");
+                c.Property(c => c.Email).HasColumnName("Email");
+                c.Property(c => c.Address).HasColumnName("Address");
+            });
+
+            Company[] company = { new(1, "GymApp", "gymapp@gymapp.com", "+905535305501", "Kartal/Istanbul") };
+            modelBuilder.Entity<Company>().HasData(company);
+
+            //Customer
+
+            modelBuilder.Entity<Customer>(c =>
+            {
+                c.ToTable("customers").HasKey(c => c.Id);
+                c.Property(c => c.Id).HasColumnName("Id");
+                c.Property(c => c.Name).HasColumnName("Name");
+                c.Property(c => c.PhoneNumber).HasColumnName("PhoneNumber");
+                c.Property(c => c.Email).HasColumnName("Email");
+                c.Property(c => c.CompanyId).HasColumnName("CompanyId");
+            });
+
+            Customer[] customer = { new(1, "GymApp", "gymapp@gymapp.com", "+905535305501", 1) };
+            modelBuilder.Entity<Customer>().HasData(customer);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Application.Features.Auths.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
+using Core.Mailing;
 using Core.Security.Dtos;
 using Core.Security.Entities;
 using Core.Security.Hashing;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Auths.Commands.Register
 {
-    public class RegisterCommand:IRequest<RegisteredDto>
+    public class RegisterCommand : IRequest<RegisteredDto>
     {
         public UserForRegisterDto UserForRegisterDto { get; set; }
         public string IpAddress { get; set; }
@@ -48,7 +49,6 @@ namespace Application.Features.Auths.Commands.Register
                     LastName = request.UserForRegisterDto.LastName,
                     Status = true
                 };
-
                 User createdUser = await _userRepository.AddAsync(newUser);
 
                 AccessToken createdAccessToken = await _authService.CreateAccessToken(createdUser);

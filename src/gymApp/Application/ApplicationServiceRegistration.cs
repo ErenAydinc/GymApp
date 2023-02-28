@@ -1,14 +1,17 @@
 ﻿using Application.Features.Auths.Rules;
 using Application.Features.BodyInformations.Rules;
-using Application.Features.MemberTypes.Rules;
-using Application.Features.MovementImageUploadMappings.Rules;
+using Application.Features.Categories.Rules;
+using Application.Features.Companies.Rules;
+using Application.Features.Customers.Rules;
 using Application.Features.Movements.Rules;
 using Application.Features.OperationClaims.Rules;
-using Application.Features.UserMemberTypeMappings.Rules;
+using Application.Features.PersonalTrainerStudents.Rules;
 using Application.Features.UserOperationClaims.Rules;
 using Application.Features.Users.Rules;
+using Application.Features.UsersMovements.Rules;
+using Application.Helpers;
 using Application.Services.AuthService;
-using Application.Services.ImageService;
+using Application.Services.MovementImageService;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
 using Core.Application.Pipelines.Logging;
@@ -31,12 +34,14 @@ namespace Application
             services.AddScoped<AuthBusinessRules>();
             services.AddScoped<UserBusinessRules>();
             services.AddScoped<BodyInformationBusinessRules>();
-            services.AddScoped<MemberTypeBusinessRules>();
             services.AddScoped<UserOperationClaimBusinessRules>();
             services.AddScoped<OperationClaimBusinessRules>();
-            services.AddScoped<UserMemberTypeMappingBusinessRules>();
             services.AddScoped<MovementBusinessRules>();
-            services.AddScoped<MovementImageUploadMappingBusinessRules>();
+            services.AddScoped<CustomerBusinessRules>();
+            services.AddScoped<CompanyBusinessRules>();
+            services.AddScoped<PersonalTrainerStudentBusinessRules>();
+            services.AddScoped<UsersMovementBusinessRules>();
+            services.AddScoped<CategoryBusinessRules>();
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
@@ -47,7 +52,8 @@ namespace Application
 
             services.AddScoped<IAuthService,AuthManager>();
             services.AddScoped<IUserService, UserManager>();
-            services.AddScoped<IImageService, ImageManager>();
+            services.AddScoped<IMovementImageService, MovementImageManager>();
+            services.AddScoped<IHelperService, HelperManager>();
 
             return services;
 

@@ -14,15 +14,9 @@ using System.Threading.Tasks;
 
 namespace Application.Features.BodyInformations.Commands.DeleteBodyInformation
 {
-    public class DeleteBodyInformationCommand:IRequest<DeleteBodyInformationDto>,ISecuredRequest
+    public class DeleteBodyInformationCommand:IRequest<DeleteBodyInformationDto>
     {
         public int Id { get; set; }
-
-        public string[] Roles { get; } =
-        {
-            BodyInformationRoles.BodyInformationAdmin,
-            BodyInformationRoles.BodyInformationDelete
-        };
 
         public class DeleteBodyInformationCommandHandler : IRequestHandler<DeleteBodyInformationCommand, DeleteBodyInformationDto>
         {

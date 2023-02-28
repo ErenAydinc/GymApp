@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.BodyInformations.Commands.CreateBodyInformation
 {
-    public class CreateBodyInformationCommand : IRequest<CreateBodyInformationDto>, ISecuredRequest
+    public class CreateBodyInformationCommand : IRequest<CreateBodyInformationDto>
     {
         public int UserId { get; set; }
         public float Length { get; set; }
@@ -23,12 +23,6 @@ namespace Application.Features.BodyInformations.Commands.CreateBodyInformation
         public float Shoulder { get; set; }
         public float Leg { get; set; }
         public float Chest { get; set; }
-
-        public string[] Roles { get; } =
-        {
-            BodyInformationRoles.BodyInformationAdmin,
-            BodyInformationRoles.BodyInformationCreate
-        };
 
         public class CreateBodyInformationCommandHandler : IRequestHandler<CreateBodyInformationCommand, CreateBodyInformationDto>
         {

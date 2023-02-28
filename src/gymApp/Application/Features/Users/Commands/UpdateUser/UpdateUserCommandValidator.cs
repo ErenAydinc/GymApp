@@ -15,6 +15,9 @@ namespace Application.Features.Users.Commands.UpdateUser
             RuleFor(u => u.Email).NotEmpty().EmailAddress();
             RuleFor(u => u.FirstName).NotEmpty();
             RuleFor(u => u.LastName).NotEmpty();
+            RuleFor(u => u.Type).NotEmpty();
+            RuleFor(u => u.MemberStartDate).NotEmpty();
+            RuleFor(u => u.MemberEndDate).NotEmpty();
         }
     }
 }

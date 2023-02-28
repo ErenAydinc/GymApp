@@ -12,7 +12,7 @@ namespace Application.Features.UserOperationClaims.Commands.CreateUserOperationC
         public CreateUserOperationClaimCommandValidator()
         {
             RuleFor(x => x.UserId).NotEmpty();
-            RuleFor(x => x.OperationClaimId).NotEmpty();
+            RuleFor(x => x.OperationClaimIds).NotEmpty();
         }
     }
 }

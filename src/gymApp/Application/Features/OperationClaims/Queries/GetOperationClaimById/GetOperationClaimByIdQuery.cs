@@ -1,4 +1,5 @@
-﻿using Application.Features.OperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.OperationClaims.Constants;
 using Application.Features.OperationClaims.Dtos;
 using Application.Features.OperationClaims.Rules;
 using Application.Services.Repositories;
@@ -20,8 +21,8 @@ namespace Application.Features.OperationClaims.Queries.GetOperationClaimById
 
         public string[] Roles { get; } =
         {
-            OperationClaimRoles.OperationClaimAdmin,
-            OperationClaimRoles.OperationClaimRead
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin
         };
 
         public class GetOperationClaimByIdQueryHandler : IRequestHandler<GetOperationClaimByIdQuery, GetOperationClaimByIdDto>

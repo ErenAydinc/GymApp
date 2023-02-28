@@ -30,6 +30,9 @@ namespace Application.Features.UserUserOperationClaims.Profiles
             CreateMap<IPaginate<UserOperationClaim>, UserOperationClaimListModel>().ReverseMap();
             CreateMap<UserOperationClaim, GetUserOperationClaimListDto>().ReverseMap();
 
+            CreateMap<IPaginate<UserOperationClaim>, UserOperationClaimListByUserIdModel>().ReverseMap();
+            CreateMap<UserOperationClaim, GetUserOperationClaimListByUserIdDto>().ReverseMap();
+
         }
     }
 }

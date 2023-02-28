@@ -1,7 +1,10 @@
-﻿using Application.Features.Movements.Dtos;
+﻿using Application.Constants;
+using Application.Features.Movements.Constants;
+using Application.Features.Movements.Dtos;
 using Application.Features.Movements.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
 using Domain.Entities;
 using MediatR;
 using System;
@@ -12,9 +15,16 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Movements.Queries.GetMovementById
 {
-    public class GetMovementByIdQuery:IRequest<GetMovementByIdDto>
+    public class GetMovementByIdQuery:IRequest<GetMovementByIdDto>,ISecuredRequest
     {
         public int Id { get; set; }
+
+        public string[] Roles { get; } =
+        {
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
+            GeneralRoles.PersonalTrainer
+        };
         public class GetMovementByIdQueryHandler:IRequestHandler<GetMovementByIdQuery, GetMovementByIdDto>
         {
             private readonly IMovementRepository _movementRepository;

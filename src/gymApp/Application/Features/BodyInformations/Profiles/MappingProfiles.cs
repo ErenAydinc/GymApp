@@ -4,6 +4,7 @@ using Application.Features.BodyInformations.Commands.UpdateBodyInformation;
 using Application.Features.BodyInformations.Dtos;
 using Application.Features.BodyInformations.Models;
 using Application.Features.BodyInformations.Queries.GetBodyInformationById;
+using Application.Features.BodyInformations.Queries.GetBodyInformationByUserId;
 using Application.Features.BodyInformations.Queries.GetBodyInformationList;
 using AutoMapper;
 using Core.Persistence.Paging;
@@ -32,6 +33,9 @@ namespace Application.Features.BodyInformations.Profiles
 
             CreateMap<BodyInformation,GetBodyInformationByIdDto>().ReverseMap();
             CreateMap<BodyInformation, GetBodyInformationByIdQuery>().ReverseMap();
+
+            CreateMap<BodyInformation, GetBodyInformationByUserIdDto>().ReverseMap();
+            CreateMap<BodyInformation, GetBodyInformationByUserIdQuery>().ReverseMap();
 
             CreateMap<IPaginate<BodyInformation>, BodyInformationListModel>().ReverseMap();
             CreateMap<IPaginate<BodyInformation>, GetBodyInformationListQuery>().ReverseMap();

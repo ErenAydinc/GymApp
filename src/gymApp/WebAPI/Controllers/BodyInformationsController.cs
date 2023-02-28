@@ -4,6 +4,7 @@ using Application.Features.BodyInformations.Commands.UpdateBodyInformation;
 using Application.Features.BodyInformations.Dtos;
 using Application.Features.BodyInformations.Models;
 using Application.Features.BodyInformations.Queries.GetBodyInformationById;
+using Application.Features.BodyInformations.Queries.GetBodyInformationByUserId;
 using Application.Features.BodyInformations.Queries.GetBodyInformationList;
 using Core.Application.Requests;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +32,13 @@ namespace WebAPI.Controllers
         {
             GetBodyInformationByIdDto getBodyInformationByIdDto = await Mediator.Send(getBodyInformationByIdQuery);
             return Ok(getBodyInformationByIdDto);
+        }
+
+        [HttpGet("{UserId}")]
+        public async Task<IActionResult> GetByUserId([FromRoute] GetBodyInformationByUserIdQuery getBodyInformationByUserIdQuery)
+        {
+            GetBodyInformationByUserIdDto getBodyInformationByUserIdDto = await Mediator.Send(getBodyInformationByUserIdQuery);
+            return Ok(getBodyInformationByUserIdDto);
         }
 
         [HttpPost]

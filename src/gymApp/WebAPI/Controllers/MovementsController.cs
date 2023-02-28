@@ -3,6 +3,7 @@ using Application.Features.Movements.Commands.DeleteMovement;
 using Application.Features.Movements.Commands.UpdateMovement;
 using Application.Features.Movements.Dtos;
 using Application.Features.Movements.Models;
+using Application.Features.Movements.Queries.GetMovementByCustomerList;
 using Application.Features.Movements.Queries.GetMovementById;
 using Application.Features.Movements.Queries.GetMovementList;
 using Core.Application.Requests;
@@ -18,11 +19,19 @@ namespace WebAPI.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
+        public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest, [FromQuery] int categoryId, [FromQuery] string? searchMovementName )
         {
-            GetMovementListQuery getMovementListQuery = new() { PageRequest = pageRequest };
+            GetMovementListQuery getMovementListQuery = new() { PageRequest = pageRequest,CategoryId=categoryId,SearchMovementName=searchMovementName };
             MovementListModel movementListModel = await Mediator.Send(getMovementListQuery);
             return Ok(movementListModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListByCategoryId([FromQuery] PageRequest pageRequest, [FromQuery] int categoryId)
+        {
+            GetMovementListByCategoryIdQuery getMovementListByCategoryIdQuery = new() { PageRequest = pageRequest,CategoryId = categoryId };
+            MovementListByCategoryIdModel movementListByCategoryIdModel = await Mediator.Send(getMovementListByCategoryIdQuery);
+            return Ok(movementListByCategoryIdModel);
         }
 
         [HttpGet("{Id}")]

@@ -9,6 +9,7 @@ using AutoMapper;
 using Core.Persistence.Paging;
 using Core.Security.Entities;
 using Domain.Entities;
+using Domain.MappingEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,9 @@ namespace Application.Features.Movements.Profiles
 
             CreateMap<IPaginate<Movement>, MovementListModel>().ReverseMap();
             CreateMap<Movement, GetMovementListDto>().ReverseMap();
+
+            CreateMap<IPaginate<Movement>, MovementListByCategoryIdModel>().ReverseMap();
+            CreateMap<Movement, GetMovementListByCategoryIdDto>().ReverseMap();
         }
     }
 }

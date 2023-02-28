@@ -31,5 +31,12 @@ namespace Application.Features.BodyInformations.Rules
 
             if (bodyInformation == null) throw new BusinessException("Id not exists");
         }
+
+        public async Task UserIdNotExists(int userId)
+        {
+            BodyInformation? bodyInformation = await _bodyInformationRepository.GetAsync(x => x.UserId == userId);
+
+            if (bodyInformation == null) throw new BusinessException("User Id not exists");
+        }
     }
 }

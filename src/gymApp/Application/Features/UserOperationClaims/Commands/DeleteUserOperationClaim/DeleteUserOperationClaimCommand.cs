@@ -1,4 +1,5 @@
-﻿using Application.Features.UserOperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.UserOperationClaims.Constants;
 using Application.Features.UserOperationClaims.Dtos;
 using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
@@ -14,14 +15,14 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserOperationClaims.Commands.DeleteUserOperationClaim
 {
-    public class DeleteUserOperationClaimCommand : IRequest<DeleteUserOperationClaimDto>,ISecuredRequest
+    public class DeleteUserOperationClaimCommand : IRequest<DeleteUserOperationClaimDto>, ISecuredRequest
     {
         public int Id { get; set; }
 
         public string[] Roles { get; } =
         {
-            UserOperationClaimRoles.UserOperationClaimDelete,
-            UserOperationClaimRoles.UserOperationClaimAdmin
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
         };
         public class DeleteUserOperationClaimCommandHandler : IRequestHandler<DeleteUserOperationClaimCommand, DeleteUserOperationClaimDto>
         {

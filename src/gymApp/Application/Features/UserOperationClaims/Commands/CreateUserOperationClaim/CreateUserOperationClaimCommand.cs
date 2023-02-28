@@ -1,4 +1,5 @@
-﻿using Application.Features.UserOperationClaims.Constants;
+﻿using Application.Constants;
+using Application.Features.UserOperationClaims.Constants;
 using Application.Features.UserOperationClaims.Dtos;
 using Application.Features.UserOperationClaims.Rules;
 using Application.Services.Repositories;
@@ -13,12 +14,12 @@ namespace Application.Features.UserOperationClaims.Commands.CreateUserOperationC
     public class CreateUserOperationClaimCommand : IRequest<CreateUserOperationClaimDto>, ISecuredRequest
     {
         public int UserId { get; set; }
-        public int[] OperationClaimId { get; set; }
+        public int[] OperationClaimIds { get; set; }
 
         public string[] Roles { get; } =
         {
-            UserOperationClaimRoles.UserOperationClaimCreate,
-            UserOperationClaimRoles.UserOperationClaimAdmin
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
         };
 
         public class CreateUserOperationClaimCommandHandler : IRequestHandler<CreateUserOperationClaimCommand, CreateUserOperationClaimDto>
@@ -37,21 +38,33 @@ namespace Application.Features.UserOperationClaims.Commands.CreateUserOperationC
             public async Task<CreateUserOperationClaimDto> Handle(CreateUserOperationClaimCommand request, CancellationToken cancellationToken)
             {
                 await _userOperationClaimBusinessRules.UserNotExists(request.UserId);
-
-                foreach (var item in request.OperationClaimId)
+                IList<CreateUserOperationClaimDto> userOperationClaims=new List<CreateUserOperationClaimDto>();
+                foreach (var item in request.OperationClaimIds)
                 {
-                    UserOperationClaim userOperationClaim = new()
+                    IList<UserOperationClaim> deleteUserOperationClaims = await _userOperationClaimRepository.GetAllAsync(x => x.UserId == request.UserId && x.OperationClaimId == item);
+                    if (deleteUserOperationClaims.Count > 0)
                     {
-                        OperationClaimId = item,
-                        UserId = request.UserId
-                    };
-                    UserOperationClaim mappedUserOperationClaim = _mapper.Map<UserOperationClaim>(userOperationClaim);
-                    UserOperationClaim createUserOperationClaim = await _userOperationClaimRepository.AddAsync(mappedUserOperationClaim);
-                    //CreateUserOperationClaimDto createUserOperationClaimDto =
-                    _mapper.Map<CreateUserOperationClaimDto>(createUserOperationClaim);
-                }
+                        foreach (var deleteUserOperationClaim in deleteUserOperationClaims)
+                        {
+                            await _userOperationClaimRepository.DeleteAsync(deleteUserOperationClaim);
+                        }
+                    }
+                    else
+                    {
+                        UserOperationClaim userOperationClaim = new()
+                        {
+                            OperationClaimId = item,
+                            UserId = request.UserId
+                        };
+                        UserOperationClaim mappedUserOperationClaim = _mapper.Map<UserOperationClaim>(userOperationClaim);
+                        UserOperationClaim createUserOperationClaim = await _userOperationClaimRepository.AddAsync(mappedUserOperationClaim);
+                        //CreateUserOperationClaimDto createUserOperationClaimDto =
+                        CreateUserOperationClaimDto createUserOperationClaimDto = _mapper.Map<CreateUserOperationClaimDto>(createUserOperationClaim);
 
-                throw new BusinessException("User operation claim added");
+                        userOperationClaims.Add(createUserOperationClaimDto);
+                    }
+                }
+                return userOperationClaims.First();
 
 
 

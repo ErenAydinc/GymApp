@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.BodyInformations.Commands.UpdateBodyInformation
 {
-    public class UpdateBodyInformationCommand:IRequest<UpdateBodyInformationDto>,ISecuredRequest
+    public class UpdateBodyInformationCommand:IRequest<UpdateBodyInformationDto>
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -24,12 +24,6 @@ namespace Application.Features.BodyInformations.Commands.UpdateBodyInformation
         public float Shoulder { get; set; }
         public float Leg { get; set; }
         public float Chest { get; set; }
-
-        public string[] Roles { get; } =
-        {
-            BodyInformationRoles.BodyInformationAdmin,
-            BodyInformationRoles.BodyInformationUpdate
-        };
 
         public class UpdateBodyInformationCommandHandler : IRequestHandler<UpdateBodyInformationCommand, UpdateBodyInformationDto>
         {
@@ -47,7 +41,7 @@ namespace Application.Features.BodyInformations.Commands.UpdateBodyInformation
             public async Task<UpdateBodyInformationDto> Handle(UpdateBodyInformationCommand request, CancellationToken cancellationToken)
             {
                 await _bodyInformationBusinessRules.IdNotExists(request.Id);
-                await _bodyInformationBusinessRules.UserIdAlreadyExists(request.UserId);
+                await _bodyInformationBusinessRules.UserIdNotExists(request.UserId);
                 
                 BodyInformation? mappedBodyInformation = _mapper.Map<BodyInformation>(request);
 

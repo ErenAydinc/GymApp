@@ -1,7 +1,10 @@
-﻿using Application.Features.Users.Dtos;
+﻿using Application.Constants;
+using Application.Features.Users.Constants;
+using Application.Features.Users.Dtos;
 using Application.Features.Users.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
 using Core.Security.Entities;
 using MediatR;
 using System;
@@ -12,9 +15,16 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Users.Queries.GetUserById
 {
-    public class GetUserByIdQuery:IRequest<GetUserByIdDto>
+    public class GetUserByIdQuery:IRequest<GetUserByIdDto>,ISecuredRequest
     {
         public int Id { get; set; }
+
+        public string[] Roles { get; } =
+        {
+            GeneralRoles.SystemAdmin,
+            GeneralRoles.GymAdmin,
+            GeneralRoles.PersonalTrainer
+        };
 
         public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, GetUserByIdDto>
         {
