@@ -11,6 +11,6 @@ namespace Application.Features.Customers.Dtos
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string CompanyId { get; set; }
+        public string? CompanyId { get; set; }
     }
 }

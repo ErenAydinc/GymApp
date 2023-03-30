@@ -2,6 +2,7 @@
 using Application.Features.Customers.Constants;
 using Application.Features.Customers.Dtos;
 using Application.Features.Customers.Rules;
+using Application.Helpers;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
@@ -22,7 +23,7 @@ namespace Application.Features.Customers.Commands.UpdateCustomer
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public string CompanyId { get; set; }
+        public string? CompanyId { get; set; }
         public string[] Roles { get; } =
         {
             GeneralRoles.SystemAdmin,
@@ -32,21 +33,24 @@ namespace Application.Features.Customers.Commands.UpdateCustomer
         {
             private readonly ICustomerRepository _customerRepository;
             private readonly CustomerBusinessRules _customerBusinessRules;
+            private readonly IHelperService _helperService;
             private readonly IMapper _mapper;
 
-            public UpdateCustomerCommandHandler(ICustomerRepository customerRepository, CustomerBusinessRules customerBusinessRules, IMapper mapper)
+            public UpdateCustomerCommandHandler(ICustomerRepository customerRepository, CustomerBusinessRules customerBusinessRules, IMapper mapper, IHelperService helperService)
             {
                 _customerRepository = customerRepository;
                 _customerBusinessRules = customerBusinessRules;
                 _mapper = mapper;
+                _helperService = helperService;
             }
 
             public async Task<UpdateCustomerDto> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
             {
                 await _customerBusinessRules.CustomerNotAlreadyExists(request.Id);
-                await _customerBusinessRules.CustomerAlreadyExists(request.Id);
                 
                 Customer? mappedCustomer = _mapper.Map<Customer>(request);
+
+                mappedCustomer.CompanyId = await _helperService.CurrentCompany();
 
                 Customer updateCustomer = await _customerRepository.UpdateAsync(mappedCustomer);
 

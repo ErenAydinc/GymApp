@@ -8,7 +8,6 @@ namespace Core.CrossCuttingConcerns.Exceptions;
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
-
     public ExceptionMiddleware(RequestDelegate next)
     {
         _next = next;
@@ -40,14 +39,13 @@ public class ExceptionMiddleware
     private Task CreateAuthorizationException(HttpContext context, Exception exception)
     {
         context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.Unauthorized);
-
         return context.Response.WriteAsync(new AuthorizationProblemDetails
         {
             Status = StatusCodes.Status401Unauthorized,
             Type = "https://example.com/probs/authorization",
             Title = "Authorization exception",
             Detail = exception.Message,
-            Instance = ""
+            Instance = exception.StackTrace,
         }.ToString());
     }
 

@@ -16,6 +16,7 @@ namespace Application.Features.UsersMovements.Queries.GetUsersMovementsByUserId
     public class GetUsersMovementsByUserIdQuery : IRequest<UsersMovementsListByUserIdModel>,ISecuredRequest
     {
         public int UserId { get; set; }
+        public int SelectedDay { get; set; }
         public PageRequest PageRequest { get; set; }
         public string[] Roles { get; } =
         {

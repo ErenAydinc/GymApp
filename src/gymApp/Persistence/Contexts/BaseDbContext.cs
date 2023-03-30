@@ -89,10 +89,10 @@ namespace Persistence.Contexts
                 u.Property(u => u.MemberStartDate).HasColumnName("MemberStartDate");
                 u.Property(u => u.MemberEndDate).HasColumnName("MemberEndDate");
                 u.Property(u => u.AuthenticatorType).HasColumnName("AuthenticatorType");
-                
+
             });
 
-            User[] users = { new(1, "gymapp", "gymapp", "gymapp@gymapp.com", 1, 1, passwordSalt, passwordHash, true, 1,1,DateTime.UtcNow,null,0) };
+            User[] users = { new(1, "gymapp", "gymapp", "gymapp@gymapp.com",1 , 1, passwordSalt, passwordHash, true,1, 1, DateTime.UtcNow, null, 0) };
             modelBuilder.Entity<User>().HasData(users);
 
             // User Operation Claim
@@ -105,14 +105,11 @@ namespace Persistence.Contexts
                 a.Property(p => p.OperationClaimId).HasColumnName("OperationClaimId");
             });
             int userOperationClaimId = 0;
-            foreach (var operationClaim in operationClaims)
+            foreach (var user in users)
             {
-                foreach (var user in users)
-                {
-                    userOperationClaimId++;
-                    UserOperationClaim[] userOperationClaims = { new(userOperationClaimId, user.Id, operationClaim.Id) };
-                    modelBuilder.Entity<UserOperationClaim>().HasData(userOperationClaims);
-                }
+                userOperationClaimId++;
+                UserOperationClaim[] userOperationClaims = { new(userOperationClaimId, user.Id, 1) };
+                modelBuilder.Entity<UserOperationClaim>().HasData(userOperationClaims);
             }
 
             //Company

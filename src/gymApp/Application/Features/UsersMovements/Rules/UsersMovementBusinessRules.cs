@@ -32,9 +32,9 @@ namespace Application.Features.UsersMovements.Rules
             if (user == null) throw new BusinessException("User not exists");
         }
 
-        public async Task MovementNotExists(int MovementId)
+        public async Task MovementNotExists(int movementId)
         {
-            Movement? Movement = await _movementRepository.GetAsync(x => x.Id == MovementId);
+            Movement? Movement = await _movementRepository.GetAsync(x => x.Id == movementId);
 
             if (Movement == null) throw new BusinessException("Movement not exists");
         }

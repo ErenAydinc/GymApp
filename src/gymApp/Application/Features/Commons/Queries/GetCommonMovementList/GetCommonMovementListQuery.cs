@@ -12,6 +12,7 @@ namespace Application.Features.Commons.Queries.GetCommonMovementList
 {
     public class GetCommonMovementListQuery:IRequest<CommonMovementListModel>
     {
+        public string? SearchMovementName { get; set; }
         public PageRequest PageRequest { get; set; }
         public class GetCommonMovementListQueryHandler : IRequestHandler<GetCommonMovementListQuery, CommonMovementListModel>
         {
@@ -29,7 +30,7 @@ namespace Application.Features.Commons.Queries.GetCommonMovementList
             public async Task<CommonMovementListModel> Handle(GetCommonMovementListQuery request, CancellationToken cancellationToken)
             {
                 int currentCustomerId = await _helperService.CurrentCustomer();
-                IPaginate<Movement> movements = await _movementRepository.GetListAsync(index:request.PageRequest.Page-1,size:request.PageRequest.PageSize);
+                IPaginate<Movement> movements = await _movementRepository.GetListAsync(searchTerm: request.SearchMovementName != "null" ? x => x.Name.Contains(request.SearchMovementName) : null, index:request.PageRequest.Page-1,size:request.PageRequest.PageSize);
                 CommonMovementListModel mappedCommonMovementListModel = _mapper.Map<CommonMovementListModel>(movements);
                 foreach (var commonMovementList in mappedCommonMovementListModel.Items)
                 {

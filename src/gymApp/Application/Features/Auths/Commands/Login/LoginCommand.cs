@@ -2,6 +2,8 @@
 using Application.Features.Auths.Rules;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
+using Core.Application.Pipelines.Logging;
+using Core.CrossCuttingConcerns.Exceptions;
 using Core.Persistence.Paging;
 using Core.Security.Dtos;
 using Core.Security.Entities;
@@ -45,7 +47,7 @@ namespace Application.Features.Auths.Commands.Login
                 User? user = await _userRepository.GetAsync(u => u.Email == request.UserForLoginDto.Email);
                 if (user.Status == false)
                 {
-                    throw new Exception("User Status False");
+                    throw new BusinessException("User Status False");
                 }
                 await _authBusinessRules.VerifyMemberPassword(request.UserForLoginDto.Password, user.PasswordHash, user.PasswordSalt);
                 IPaginate<RefreshToken> refreshToken = await _refreshTokenRepository.GetListAsync(x => x.UserId == user.Id);

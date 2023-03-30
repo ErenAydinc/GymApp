@@ -6,21 +6,27 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using WebAPI.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
 builder.Services.AddApplicationServices();
 builder.Services.AddSecurityServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 //builder.Services.AddInfrastructureServices();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+    options.AddPolicy(Configurations.CorsPolicyName,
+        builder => {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+    )
+);
+builder.Services.AddControllers();
+
 
 TokenOptions? tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -69,22 +75,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (app.Environment.IsProduction())
-    app.ConfigureCustomExceptionMiddleware();
+//if (app.Environment.IsProduction())
+//    app.ConfigureCustomExceptionMiddleware();
 
-app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-
+app.ConfigureCustomExceptionMiddleware();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
+app.UseCors(Configurations.CorsPolicyName);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
+    endpoints.MapControllers().RequireCors(Configurations.CorsPolicyName);
 });
 
 //app.MapControllers();

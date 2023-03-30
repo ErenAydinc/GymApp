@@ -66,7 +66,7 @@ namespace Application.Features.Users.Commands.CreateUser
                     PasswordSalt = passwordSalt,
                     FirstName = request.UserForRegisterDto.FirstName,
                     LastName = request.UserForRegisterDto.LastName,
-                    CustomerId = await _helperService.CurrentCustomer(),
+                    CustomerId =request.UserForRegisterDto.CustomerId==null? await _helperService.CurrentCustomer(): request.UserForRegisterDto.CustomerId,
                     CompanyId = await _helperService.CurrentCompany(),
                     Status = true,
                     Type = request.UserForRegisterDto.Type,
@@ -76,7 +76,7 @@ namespace Application.Features.Users.Commands.CreateUser
                 };
 
                 User createdUser = await _userRepository.AddAsync(newUser);
-
+                request.UserForRegisterDto.Id = createdUser.Id;
                 AccessToken createdAccessToken = await _authService.CreateAccessToken(createdUser);
                 RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(createdUser, request.IpAddress);
                 RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);

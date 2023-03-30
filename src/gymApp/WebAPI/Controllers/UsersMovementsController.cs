@@ -83,5 +83,12 @@ namespace WebAPI.Controllers
             DeleteUsersMovementDto deleteUsersMovementDto = await Mediator.Send(deleteUsersMovementCommand);
             return Ok(deleteUsersMovementDto);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMobile([FromBody] DeleteUsersMovementCommand deleteUsersMovementCommand)
+        {
+            DeleteUsersMovementDto deleteUsersMovementDto = await Mediator.Send(deleteUsersMovementCommand);
+            return Ok(deleteUsersMovementDto);
+        }
     }
 }
